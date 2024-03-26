@@ -2,19 +2,21 @@ from .models import *
 from .serializer import *
 from rest_framework.response import Response 
 from rest_framework.decorators import api_view
-# Create your views here.
+import json
 
 @api_view(['GET'])
 def getRoutes(request):
     routes = [
-        {'GET':'api/dept'},
-        {'GET':'api/dept/id'},
-        {'POST':'api/dept/create-dept'},
-        {'GET':'api/exam'},
-        {'GET':'api/exam/id'},
-        {'POST':'api/exam/create-exam'},
-        {'GET':'api/question'},
-        {'GET':'api/question/id'},
+        {'POST':'api/create-dept'},
+        {'GET':'api/view-dept'},
+        {'GET':'api/read-dept/id'},
+        {'POST':'api/create-exam/dept-id'},
+        {'GET':'api/view-exam'},
+        {'GET':'api/read-exam/id'},
+        {'GET':'api/view-question'},
+        {'GET':'api/read-question/id'},
+        {'POST':'api/create-question/exam-id'},
+
     ]
     return Response(routes)
 
@@ -38,7 +40,7 @@ def questionList(request):
 
 @api_view(['GET'])
 def departmentDetail(request,pk):
-    Dept = Department.objects.filter(id = pk)
+    Dept = Department.objects.get(id = pk)
     serializer = DepartmentSerializer(Dept, many= False)
     return Response(serializer.data)
     
@@ -78,5 +80,20 @@ def createExam(request, pk):
     newExam.save()
     Eam = Exam.objects.all()
     serializer = ExamSerializer(Eam, many = True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def createQuestion(request, pk):
+    Eam = Exam.objects.get(id = pk)
+    data = request.data
+    newQuestion = Question.objects.create(
+         exam = Eam,
+         question = data['question'],
+         options =  data['options'],
+         true_option = data['true_option']
+         )
+    newQuestion.save()
+    Ques = Question.objects.all()
+    serializer = QuestionSerializer(Ques, many = True)
     return Response(serializer.data)
 

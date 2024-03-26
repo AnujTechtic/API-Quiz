@@ -8,12 +8,13 @@ from rest_framework.decorators import api_view
 def getRoutes(request):
     routes = [
         {'GET':'api/dept'},
-        {'GET':'api/exam'},
-        {'GET':'api/question'},
         {'GET':'api/dept/id'},
+        {'POST':'api/dept/create-dept'},
+        {'GET':'api/exam'},
         {'GET':'api/exam/id'},
+        {'POST':'api/exam/create-exam'},
+        {'GET':'api/question'},
         {'GET':'api/question/id'},
-        {'POST':'api/dept/create-exam'},
     ]
     return Response(routes)
 
@@ -55,7 +56,16 @@ def questionDetail(request,pk):
 
 @api_view(['POST'])
 def createDepartment(request):
+     print(request.method)
      data = request.data
+     newDept = Department.objects.create(
+          name = data['name']
+     )
+     newDept.save()
+     Dept = Department.objects.all()
+     serializer = DepartmentSerializer(Dept, many = True)
+     return Response(serializer.data)
+
     
 @api_view(['POST'])
 def createExam(request, pk):
@@ -66,7 +76,6 @@ def createExam(request, pk):
          name = data['name'],
          code = data['code'])
     newExam.save()
-    print(newExam)
     Eam = Exam.objects.all()
     serializer = ExamSerializer(Eam, many = True)
     return Response(serializer.data)

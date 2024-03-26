@@ -2,12 +2,12 @@ from django.urls import path
 from . import views
 urlpatterns = [
     path('',views.getRoutes),
-    path('dept', views.departmentList, name='dept-list'),
-    path('exam', views.examList, name='exam-list'),
-    path('question', views.questionList, name='question-list'),
-    path('dept/<str:pk>', views.departmentDetail, name='dept'),
-    path('exam/<str:pk>', views.examDetail, name='exam'),
-    path('question/<str:pk>', views.questionDetail, name='question'),
-    path('dept/create-exam/<str:pk>', views.createExam, name='create-exam'),
-
+    path('create-dept', views.createDepartment, name='create-dept'),
+    path('view-dept', views.departmentList, name='view-dept'),
+    path('read-dept/<str:pk>', views.departmentDetail, name='read-dept'),
+    path('create-exam/<str:pk>', views.createExam, name='create-exam'),
+    path('read-exam/<str:pk>', views.examDetail, name='read-exam'),
+    path('view-exam', views.examList, name='view-exam'),
+    path('view-question', views.questionList, name='view-question'),
+    path('read-question/<str:pk>', views.questionDetail, name='read-question'),
 ]
